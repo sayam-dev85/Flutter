@@ -1,0 +1,83 @@
+    উইজেটের মূল ধারণা
+    ফ্লাটারে অ্যাপ তৈরি করা মানে হলো উইজেটগুলোকে একটি গাছের (tree) মতো করে সাজানো। একে উইজেট ট্রি (Widget Tree) বলা হয়। একটি উইজেটের ভেতরে আরেকটি উইজেট থাকতে পারে, তার ভেতরে আবার অন্য উইজেট, এভাবেই পুরো অ্যাপের UI তৈরি হয়।
+    উদাহরণস্বরূপ:
+    আপনার অ্যাপের মূল ভিত্তি হলো MaterialApp (একটি উইজেট)।
+    তার ভেতরে একটি Scaffold (আরেকটি উইজেট) থাকতে পারে, যা অ্যাপের বেসিক লেআউট (যেমন অ্যাপ বার, বডি) প্রদান করে।
+    Scaffold-এর body-তে একটি Column (লেআউট উইজেট) থাকতে পারে।
+    Column-এর ভেতরে একাধিক Text এবং ElevatedButton (উইজেট) থাকতে পারে।
+
+    উইজেটের প্রকারভেদ:
+    উইজেটগুলোকে মূলত দুটি প্রধান ভাগে ভাগ করা হয়:
+    1. StatelessWidget
+    StatelessWidget হলো এমন উইজেট যা একবার তৈরি হওয়ার পর আর পরিবর্তন হয় না। এর অবস্থা (state) স্থির থাকে। ব্যবহারকারীর কোনো ক্রিয়া বা ডেটা পরিবর্তনের সাথে এর চেহারা বদলায় না। এটি শুধুমাত্র যে তথ্য দিয়ে তৈরি করা হয়, তাই প্রদর্শন করে।
+    কখন ব্যবহার করবেন? যখন UI-এর কোনো অংশ স্থির থাকবে, যেমন একটি আইকন, একটি লেবেল বা একটি শিরোনাম।
+    উদাহরণ: Text, Icon, Container (যদি এর বৈশিষ্ট্যগুলো পরিবর্তন না হয়), SizedBox।
+
+    উদাহরণ:Dart
+    import 'package:flutter/material.dart';
+    class MyStaticText extends StatelessWidget {
+      const MyStaticText({super.key});
+
+      @override
+      Widget build(BuildContext context) {
+        // এই উইজেটটি শুধু একটি টেক্সট দেখাবে, এর কোনো পরিবর্তন হবে না।
+        return const Text(
+          'Hello, I am a StatelessWidget!',
+          style: TextStyle(fontSize: 20),
+        );
+      }
+    }
+
+
+    2. StatefulWidget
+    StatefulWidget হলো এমন উইজেট যা তার জীবনচক্রে (lifecycle) পরিবর্তন হতে পারে। ব্যবহারকারীর ইন্টারঅ্যাকশন (যেমন: বাটনে ক্লিক করা, ফর্মে টাইপ করা) বা অন্য কোনো কারণে এর ভেতরের ডেটা বা অবস্থা (State) পরিবর্তন হতে পারে, এবং সেই পরিবর্তনের সাথে সাথে UI-ও নতুন করে আঁকা (re-rendered) হয়।
+    কখন ব্যবহার করবেন? যখন UI-এর কোনো অংশের অবস্থা পরিবর্তনশীল হবে, যেমন একটি চেকবক্স, একটি স্লাইডার, বা একটি কাউন্টার যা বাটনে ক্লিক করলে বাড়ে।
+    উদাহরণ: Checkbox, Slider, TextField, Form।
+    কোড উদাহরণ:
+    Dart
+    import 'package:flutter/material.dart';
+
+    class CounterApp extends StatefulWidget {
+      const CounterApp({super.key});
+
+      @override
+      State<CounterApp> createState() => _CounterAppState();
+    }
+
+    class _CounterAppState extends State<CounterApp> {
+      int _counter = 0; // এটি হলো 'State' বা পরিবর্তনশীল ডেটা
+
+      void _incrementCounter() {
+        setState(() {
+          // setState() কল করলে ফ্লাটার বুঝতে পারে যে State পরিবর্তন হয়েছে
+          // এবং UI নতুন করে আঁকতে হবে।
+          _counter++;
+        });
+      }
+
+      @override
+      Widget build(BuildContext context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text('You have pushed the button this many times:'),
+            Text(
+              '$_counter', // কাউন্টারের মান এখানে দেখানো হচ্ছে
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            ElevatedButton(
+              onPressed: _incrementCounter, // বাটনে ক্লিক করলে মান বাড়বে
+              child: const Icon(Icons.add),
+            )
+          ],
+        );
+      }
+    }
+
+    ফ্লাটারে এই দুই ধরনের উইজেট ছাড়াও আরও অনেক বিল্ট-ইন উইজেট রয়েছে যা বিভিন্ন কাজে লাগে, যেমন:
+    লেআউট উইজেট: Row, Column, Stack, Container
+    টেক্সট উইজেট: Text
+    ইনপুট উইজেট: TextField, ElevatedButton
+    অ্যানিমেশন উইজেট: AnimatedContainer
+    সুতরাং, ফ্লাটার ডেভেলপমেন্টের মূল ভিত্তিই হলো এই উইজেটগুলোকে বোঝা এবং সেগুলোকে creatively ব্যবহার করে সুন্দর ও কার্যকরী ইউজার ইন্টারফেস তৈরি করা।
+
